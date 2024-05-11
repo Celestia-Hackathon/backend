@@ -10,6 +10,7 @@ import {
     getDocs,
     updateDoc,
     deleteDoc,
+    serverTimestamp,
 } from "firebase/firestore";
 
 const db = getFirestore(firebase);
@@ -17,11 +18,31 @@ const db = getFirestore(firebase);
 export const createPost = async (req, res, next) => {
     try {
         const data = req.body;
+
+        // Add server timestamp to the data
+        data.createdAt = serverTimestamp();
+        
         const docRef = await addDoc(collection(db, "posts"), data);
 
-        // assing postId to the post
+        // Assign postId to the post
         const postId = docRef.id;
         await updateDoc(doc(db, "posts", postId), { postId });
+
+        // Add postId to the user's postsId array
+        const userId = data.userId; // Assuming userId is present in the post data
+        const userRef = doc(db, "users", userId);
+        const userDoc = await getDoc(userRef);
+
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const updatedPostsId = [...userData.postsId, postId]; // Add new postId to the existing postsId array
+
+            // Update the user document with the modified postsId array
+            await updateDoc(userRef, { postsId: updatedPostsId });
+        } else {
+            // throw new Error("User not found");
+            console.log("User not found");
+        }
 
         res.status(200).send("post created successfully");
     } catch (error) {
@@ -84,7 +105,7 @@ export const getUsers = async (req, res, next) => {
             res.status(400).send("No users found");
         } else {
             users.forEach((doc) => {
-                const user = new Post(
+                const user = new User(
                     // doc.id,
                     doc.data().userId,
                     doc.data().wallet,
