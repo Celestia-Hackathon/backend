@@ -116,7 +116,9 @@ export const getUsers = async (req, res, next) => {
                     doc.data().bio,
                     doc.data().avatarImg,
                     doc.data().bannerImg,
-                    doc.data().postsId
+                    doc.data().postsId,
+                    doc.data().nfts,
+                    doc.data().badges
                 );
                 usersArray.push(user);
             });

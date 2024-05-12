@@ -11,14 +11,45 @@ const post = {
 }
 
 const user = {
-	userId: "555555555",
-    wallet: "user3_wallet_address",
-    name: "Alice Johnson",
-    userName: "alicej",
-    followers: ["user2_id", "user4_id"],
-    following: ["user1_id", "user2_id"],
-    bio: "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.",
-    avatarImg: "https://example.com/alice_avatar.jpg",
-    bannerImg: "https://example.com/alice_banner.jpg",
-    postsId: ["post6_id"]
+    name: "John Doe",
+    avatarImg: "https://randomuser.me/api/portraits/men/10.jpg",
+    userId: "2",
+    userName: "johndoe",
+    followers: ["2", "3"],
+    following: ["2", "3"],
+    bio: "violets are purple, roses are blue, I'm a poet and I know it",
+    wallet: "0xa9760110671d7a5a37A72F684D7D1d92F2dE84dA",
+    postsId: [],
+    bannerImg: "https://random.imagecdn.app/500/150",
+    nfts: [
+        {
+            nftId: "1",
+            nftImg: "https://random.imagecdn.app/150/150",
+            name: "NFT",
+            address: "0x1234567890abcdef",
+            rarity: "Rare"
+        },
+        {
+            nftId: "2",
+            nftImg: "https://random.imagecdn.app/250/250",
+            name: "NFT",
+            address: "0x1234567890abcdef",
+            rarity: "Legendary"
+        },
+        {
+            nftId: "3",
+            nftImg: "https://random.imagecdn.app/200/200",
+            name: "NFT",
+            address: "0x1234567890abcdef",
+            rarity: "Epic"
+        },
+    ],
+    badges: [
+        {
+            badgeId: "1",
+            badgeImg: "https://random.imagecdn.app/100/100",
+            name: "Mint three",
+            description: "Badge earned for minting three NFTs"
+        }
+    ]
 }
