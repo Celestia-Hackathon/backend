@@ -84,7 +84,9 @@ export const getPosts = async (req, res, next) => {
                     doc.data().caption,
                     doc.data().likes,
                     doc.data().comments,
-                    doc.data().createdAt
+                    doc.data().createdAt,
+                    doc.data().price,
+                    doc.data().nft
                 );
                 postArray.push(post);
             });
@@ -202,7 +204,9 @@ export const getUserPosts = async (req, res, next) => {
                         doc.data().caption,
                         doc.data().likes,
                         doc.data().comments,
-                        doc.data().createdAt
+                        doc.data().createdAt,
+                        doc.data().price,
+                        doc.data().nft
                     );
                     postArray.push(post);
                 }

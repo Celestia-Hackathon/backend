@@ -38,4 +38,6 @@ export type Post = {
     likes: string[];
     comments: string[];
     createdAt: string;
+    price: number;
+    nft: NFT;
 }

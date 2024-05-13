@@ -1,5 +1,5 @@
 class Post {
-    constructor( postId, userId, userName, avatarImg, postImg, caption, likes, comments, createdAt) {
+    constructor( postId, userId, userName, avatarImg, postImg, caption, likes, comments, createdAt, price, nft) {
         (this.postId = postId),
         (this.userId = userId),
         (this.userName = userName),
@@ -9,6 +9,8 @@ class Post {
         (this.likes = likes),
         (this.comments = comments),
         (this.createdAt = createdAt);
+        (this.price = price);
+        (this.nft = nft);
     }
 }
 
