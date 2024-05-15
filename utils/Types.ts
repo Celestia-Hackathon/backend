@@ -1,6 +1,7 @@
 export type User = {
     userId: string;
     wallet: string;
+    tokens: number;
     name: string;
     userName: string;
     followers: string[];
@@ -11,6 +12,7 @@ export type User = {
     postsId: string[];
     nfts: NFT[];
     badges: Badge[];
+    questsId: string[];
 }
 
 export type NFT = {
@@ -40,4 +42,16 @@ export type Post = {
     createdAt: string;
     price: number;
     nft: NFT;
+}
+
+export type Quest = {
+    questId: string;
+    questName: string;
+    questDescription: string;
+    reward: number;
+    createdBy: string;
+    completedBy: string[];
+    createdAt: string;
+    dueDate: string;
+    applicantsId: string[];
 }

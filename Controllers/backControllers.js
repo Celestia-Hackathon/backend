@@ -4,6 +4,7 @@ import User from "../Models/User.js";
 import {
     getFirestore,
     collection,
+    arrayUnion,
     doc,
     addDoc,
     getDoc,
@@ -21,7 +22,7 @@ export const createPost = async (req, res, next) => {
 
         // Add server timestamp to the data
         data.createdAt = serverTimestamp();
-        
+
         const docRef = await addDoc(collection(db, "posts"), data);
 
         // Assign postId to the post
@@ -64,6 +65,35 @@ export const createUser = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 };
+
+// export const createQuest = async (req, res, next) => {
+//     try {
+//         const data = req.body;
+
+//         // Fetch all user IDs
+//         const usersSnapshot = await getDocs(collection(db, "users"));
+//         const userIds = usersSnapshot.docs.map(doc => doc.id);
+
+//         // Add questId to the quest
+//         const docRef = await addDoc(collection(db, "quests"), data);
+//         const questId = docRef.id;
+//         await updateDoc(doc(db, "quests", questId), { questId });
+
+//         // Add questId to the user's questsId array for each user
+//         const promises = userIds.map(async userId => {
+//             const userRef = doc(db, "users", userId);
+//             await updateDoc(userRef, { questsId: arrayUnion(questId) });
+//         });
+//         await Promise.all(promises);
+
+//         // Add all user IDs to the quest's applicantsId array
+//         await updateDoc(docRef, { applicantsId: userIds });
+
+//         res.status(200).send("Quest created successfully");
+//     } catch (error) {
+//         res.status(400).send(error.message);
+//     }
+// };
 
 export const getPosts = async (req, res, next) => {
     try {
@@ -111,6 +141,7 @@ export const getUsers = async (req, res, next) => {
                     // doc.id,
                     doc.data().userId,
                     doc.data().wallet,
+                    doc.data().tokens,
                     doc.data().name,
                     doc.data().userName,
                     doc.data().followers,
@@ -120,12 +151,43 @@ export const getUsers = async (req, res, next) => {
                     doc.data().bannerImg,
                     doc.data().postsId,
                     doc.data().nfts,
-                    doc.data().badges
+                    doc.data().badges,
+                    doc.data().questsId
                 );
                 usersArray.push(user);
             });
 
             res.status(200).send(usersArray);
+        }
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+export const getQuests = async (req, res, next) => {
+    try {
+        const quests = await getDocs(collection(db, "quests"));
+        const questArray = [];
+
+        if (quests.empty) {
+            res.status(400).send("No Quests found");
+        } else {
+            quests.forEach((doc) => {
+                const quest = new Quests(
+                    doc.data().questId,
+                    doc.data().questName,
+                    doc.data().questDescription,
+                    doc.data().reward,
+                    doc.data().createdBy,
+                    doc.data().completedBy,
+                    doc.data().createdAt,
+                    doc.data().dueDate,
+                    doc.data().applicantsId
+                );
+                questArray.push(quest);
+            });
+
+            res.status(200).send(questArray);
         }
     } catch (error) {
         res.status(400).send(error.message);
@@ -178,6 +240,34 @@ export const patchPost = async (req, res, next) => {
             res.status(200).send("Post partially updated successfully");
         } else {
             res.status(404).send("Post not found");
+        }
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+export const addUserNft = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        const newNft = req.body;
+
+        const userRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+
+            // Ensure the 'nfts' field exists and initialize it if it doesn't
+            const updatedNfts = userData.nfts
+                ? [...userData.nfts, newNft]
+                : [newNft];
+
+            // Update the user document with the modified 'nfts' array
+            await updateDoc(userRef, { nfts: updatedNfts });
+
+            res.status(200).send("NFT added to user successfully");
+        } else {
+            res.status(404).send("User not found");
         }
     } catch (error) {
         res.status(400).send(error.message);

@@ -1,7 +1,8 @@
 class User {
-    constructor( userId, wallet, name, userName, followers, following, bio, avatarImg, bannerImg, postsId, nfts, badges) {
+    constructor( userId, wallet,tokens, name, userName, followers, following, bio, avatarImg, bannerImg, postsId, nfts, badges, questsId) {
         (this.userId = userId),
         (this.wallet = wallet),
+        (this.tokens = tokens),
         (this.name = name),
         (this.userName = userName),
         (this.followers = followers),
@@ -11,7 +12,8 @@ class User {
         (this.bannerImg = bannerImg),
         (this.postsId = postsId),
         (this.nfts = nfts),
-        (this.badges = badges);
+        (this.badges = badges),
+        (this.questsId = questsId);
     }
 }
 
