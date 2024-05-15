@@ -66,34 +66,35 @@ export const createUser = async (req, res, next) => {
     }
 };
 
-// export const createQuest = async (req, res, next) => {
-//     try {
-//         const data = req.body;
+// not really working yet
+export const createQuest = async (req, res, next) => {
+    try {
+        const data = req.body;
 
-//         // Fetch all user IDs
-//         const usersSnapshot = await getDocs(collection(db, "users"));
-//         const userIds = usersSnapshot.docs.map(doc => doc.id);
+        // Fetch all user IDs
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        const userIds = usersSnapshot.docs.map(doc => doc.id);
 
-//         // Add questId to the quest
-//         const docRef = await addDoc(collection(db, "quests"), data);
-//         const questId = docRef.id;
-//         await updateDoc(doc(db, "quests", questId), { questId });
+        // Add questId to the quest
+        const docRef = await addDoc(collection(db, "quests"), data);
+        const questId = docRef.id;
+        await updateDoc(doc(db, "quests", questId), { questId });
 
-//         // Add questId to the user's questsId array for each user
-//         const promises = userIds.map(async userId => {
-//             const userRef = doc(db, "users", userId);
-//             await updateDoc(userRef, { questsId: arrayUnion(questId) });
-//         });
-//         await Promise.all(promises);
+        // Add questId to the user's questsId array for each user
+        const promises = userIds.map(async userId => {
+            const userRef = doc(db, "users", userId);
+            await updateDoc(userRef, { questsId: arrayUnion(questId) });
+        });
+        await Promise.all(promises);
 
-//         // Add all user IDs to the quest's applicantsId array
-//         await updateDoc(docRef, { applicantsId: userIds });
+        // Add all user IDs to the quest's applicantsId array
+        await updateDoc(docRef, { applicantsId: userIds });
 
-//         res.status(200).send("Quest created successfully");
-//     } catch (error) {
-//         res.status(400).send(error.message);
-//     }
-// };
+        res.status(200).send("Quest created successfully");
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
 
 export const getPosts = async (req, res, next) => {
     try {
