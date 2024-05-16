@@ -81,16 +81,84 @@ export const createQuest = async (req, res, next) => {
         await updateDoc(doc(db, "quests", questId), { questId });
 
         // Add questId to the user's questsId array for each user
-        const promises = userIds.map(async (userId) => {
-            const userRef = doc(db, "users", userId);
-            await updateDoc(userRef, { questsId: arrayUnion(questId) });
-        });
-        await Promise.all(promises);
+        // const promises = userIds.map(async (userId) => {
+        //     const userRef = doc(db, "users", userId);
+        //     await updateDoc(userRef, { questsId: arrayUnion(questId) });
+        // });
+        // await Promise.all(promises);
 
         // Add all user IDs to the quest's applicantsId array
         await updateDoc(docRef, { applicantsId: userIds });
 
         res.status(200).send("Quest created successfully");
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+// export const applyForQuest = async (req, res, next) => {
+//     try {
+//         const { userId, questId } = req.body;
+
+//         // Add userId to the quest's applicantsId array
+//         const questRef = doc(db, "quests", questId);
+//         await updateDoc(questRef, { applicantsId: arrayUnion(userId) });
+
+//         res.status(200).send("Applied for quest successfully");
+//     } catch (error) {
+//         res.status(400).send(error.message);
+//     }
+// };
+
+export const userCompletedQuest = async (req, res, next) => {
+    try {
+        // const { userId, questId } = req.body;
+        const userId = req.params.userId;
+        const questId = req.params.questId;
+
+        // Add userId to the quest's completedBy array
+        const questRef = doc(db, "quests", questId);
+        await updateDoc(questRef, { completedBy: arrayUnion(userId) });
+
+        res.status(200).send("User completed Quest successfully");
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+export const addQuestReward = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        const questId = req.params.questId;
+        const reward = req.params.reward;
+
+        // Fetch user's tokens
+        const userRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+            const userTokens = userData.tokens;
+
+            if (userData.questsId.includes(questId)) {
+                res.status(400).send(
+                    "User has already claimed the reward for this quest"
+                );
+                return;
+            }
+
+            // Update user's questsId with the new questId
+            await updateDoc(userRef, { questsId: arrayUnion(questId) });
+
+            // Update user's tokens with the reward
+            await updateDoc(userRef, {
+                tokens: parseInt(userTokens) + parseInt(reward),
+            });
+
+            res.status(200).send("Quest reward added successfully");
+        } else {
+            res.status(404).send("User not found");
+        }
     } catch (error) {
         res.status(400).send(error.message);
     }

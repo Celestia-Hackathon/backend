@@ -13,6 +13,8 @@ import {
   patchPost,
   addUserNft,
   createQuest,
+  userCompletedQuest,
+  addQuestReward,
   getUserByWallet,
 } from '../Controllers/backControllers.js';
 
@@ -25,6 +27,8 @@ router.get('/get-user/:wallet', getUserByWallet);
 router.post('/create-post', createPost);
 router.post('/create-user', createUser);
 router.post('/create-quest', createQuest);
+router.get('/complete-quest/:userId/:questId', userCompletedQuest);
+router.get('/add-quest-reward/:userId/:questId/:reward', addQuestReward);
 router.get('/get-post/:id', getPost);
 router.put('/update/:id', updatePost);
 router.patch('/patch-post/:id', patchPost);
