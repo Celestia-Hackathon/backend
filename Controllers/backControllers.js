@@ -1,6 +1,7 @@
 import firebase from "../firebase.js";
 import Post from "../Models/Post.js";
 import User from "../Models/User.js";
+import Quests from "../Models/Quests.js";
 import {
     getFirestore,
     collection,
@@ -66,14 +67,13 @@ export const createUser = async (req, res, next) => {
     }
 };
 
-// not really working yet
 export const createQuest = async (req, res, next) => {
     try {
         const data = req.body;
 
         // Fetch all user IDs
         const usersSnapshot = await getDocs(collection(db, "users"));
-        const userIds = usersSnapshot.docs.map(doc => doc.id);
+        const userIds = usersSnapshot.docs.map((doc) => doc.id);
 
         // Add questId to the quest
         const docRef = await addDoc(collection(db, "quests"), data);
@@ -81,7 +81,7 @@ export const createQuest = async (req, res, next) => {
         await updateDoc(doc(db, "quests", questId), { questId });
 
         // Add questId to the user's questsId array for each user
-        const promises = userIds.map(async userId => {
+        const promises = userIds.map(async (userId) => {
             const userRef = doc(db, "users", userId);
             await updateDoc(userRef, { questsId: arrayUnion(questId) });
         });
@@ -159,6 +159,49 @@ export const getUsers = async (req, res, next) => {
             });
 
             res.status(200).send(usersArray);
+        }
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+export const getUserByWallet = async (req, res, next) => {
+    try {
+        const wallet = req.params.wallet;
+        const users = await getDocs(collection(db, "users"));
+        let userFound = false;
+        let userObj = {};
+
+        if (users.empty) {
+            res.status(400).send("No users found");
+        } else {
+            users.forEach((doc) => {
+                if (doc.data().wallet === wallet) {
+                    userFound = true;
+                    userObj = new User(
+                        doc.data().userId,
+                        doc.data().wallet,
+                        doc.data().tokens,
+                        doc.data().name,
+                        doc.data().userName,
+                        doc.data().followers,
+                        doc.data().following,
+                        doc.data().bio,
+                        doc.data().avatarImg,
+                        doc.data().bannerImg,
+                        doc.data().postsId,
+                        doc.data().nfts,
+                        doc.data().badges,
+                        doc.data().questsId
+                    );
+                }
+            });
+
+            if (userFound) {
+                res.status(200).send(userObj);
+            } else {
+                res.status(404).send("User not found");
+            }
         }
     } catch (error) {
         res.status(400).send(error.message);

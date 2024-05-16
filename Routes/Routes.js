@@ -13,6 +13,7 @@ import {
   patchPost,
   addUserNft,
   createQuest,
+  getUserByWallet,
 } from '../Controllers/backControllers.js';
 
 const router = express.Router();
@@ -20,9 +21,10 @@ const router = express.Router();
 router.get('/get-posts', getPosts);
 router.get('/get-users', getUsers);
 router.get('/get-quests', getQuests);
+router.get('/get-user/:wallet', getUserByWallet);
 router.post('/create-post', createPost);
 router.post('/create-user', createUser);
-// router.post('/create-quest', createQuest);
+router.post('/create-quest', createQuest);
 router.get('/get-post/:id', getPost);
 router.put('/update/:id', updatePost);
 router.patch('/patch-post/:id', patchPost);
