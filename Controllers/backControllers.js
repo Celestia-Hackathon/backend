@@ -96,19 +96,20 @@ export const createQuest = async (req, res, next) => {
     }
 };
 
-// export const applyForQuest = async (req, res, next) => {
-//     try {
-//         const { userId, questId } = req.body;
+export const applyForQuest = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        const questId = req.params.questId;
 
-//         // Add userId to the quest's applicantsId array
-//         const questRef = doc(db, "quests", questId);
-//         await updateDoc(questRef, { applicantsId: arrayUnion(userId) });
+        // Add userId to the quest's applicantsId array
+        const questRef = doc(db, "quests", questId);
+        await updateDoc(questRef, { applicantsId: arrayUnion(userId) });
 
-//         res.status(200).send("Applied for quest successfully");
-//     } catch (error) {
-//         res.status(400).send(error.message);
-//     }
-// };
+        res.status(200).send("Applied for quest successfully");
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
 
 export const userCompletedQuest = async (req, res, next) => {
     try {

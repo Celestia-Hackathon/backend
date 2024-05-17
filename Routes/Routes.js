@@ -13,6 +13,7 @@ import {
   patchPost,
   addUserNft,
   createQuest,
+  applyForQuest,
   userCompletedQuest,
   addQuestReward,
   getUserByWallet,
@@ -27,6 +28,7 @@ router.get('/get-user/:wallet', getUserByWallet);
 router.post('/create-post', createPost);
 router.post('/create-user', createUser);
 router.post('/create-quest', createQuest);
+router.get('/apply-for-quest/:userId/:questId', applyForQuest);
 router.get('/complete-quest/:userId/:questId', userCompletedQuest);
 router.get('/add-quest-reward/:userId/:questId/:reward', addQuestReward);
 router.get('/get-post/:id', getPost);
