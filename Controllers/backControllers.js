@@ -61,7 +61,7 @@ export const createUser = async (req, res, next) => {
         const userId = docRef.id;
         await updateDoc(doc(db, "users", userId), { userId });
 
-        res.status(200).send("user created successfully");
+        res.status(200).send(userId);
     } catch (error) {
         res.status(400).send(error.message);
     }
