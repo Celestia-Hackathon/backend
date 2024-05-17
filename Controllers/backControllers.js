@@ -277,6 +277,25 @@ export const getUserByWallet = async (req, res, next) => {
     }
 };
 
+export const followUser = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        const otherUserId = req.params.otherUserId;
+
+        // Add otherUserId to the user's followers array
+        const userRef = doc(db, "users", userId);
+        await updateDoc(userRef, { following: arrayUnion(otherUserId) });
+
+        // Add userId to the follower's following array
+        const otherUserRef = doc(db, "users", otherUserId);
+        await updateDoc(otherUserRef, { followers: arrayUnion(userId) });
+
+        res.status(200).send("User followed successfully");
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
 export const getQuests = async (req, res, next) => {
     try {
         const quests = await getDocs(collection(db, "quests"));

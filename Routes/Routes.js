@@ -17,6 +17,7 @@ import {
   userCompletedQuest,
   addQuestReward,
   getUserByWallet,
+  followUser,
 } from '../Controllers/backControllers.js';
 
 const router = express.Router();
@@ -33,6 +34,7 @@ router.get('/complete-quest/:userId/:questId', userCompletedQuest);
 router.get('/add-quest-reward/:userId/:questId/:reward', addQuestReward);
 router.get('/get-post/:id', getPost);
 router.put('/update/:id', updatePost);
+router.get('/follow-user/:userId/:otherUserId', followUser);
 router.patch('/patch-post/:id', patchPost);
 router.patch('/add-nft/:userId', addUserNft);
 router.get('/get-user-posts/:userId', getUserPosts);
